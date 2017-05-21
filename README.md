@@ -2,9 +2,9 @@
 A PHP class which brings back @-prefix usage in CURL requests to live, even in PHP 7. <http://lazycurl.net/>
 
 ## About
-The [PHP CURL library](http://php.net/manual/book.curl.php) is an extremely powerful tool supporting a wide range of protocols. Yet it may be too powerful that there are [over 140 customizable options](http://php.net/manual/function.curl-setopt.php) and some of them are affecting one another. Lazycurl is developed to provide an easy-to-use interface for most HTTP requests.
+The [PHP CURL library](http://php.net/manual/book.curl.php) is an extremely powerful tool supporting a wide range of protocols. Yet it may be too powerful that there are [over 140 customizable options](http://php.net/manual/function.curl-setopt.php) and some of them are affecting one another. LazyCurl is developed to provide an easy-to-use interface for most HTTP requests.
 
-The @-prefix usage in PHP CURL was once a handy method for uploading file in HTTP POST requests. It was deprecated as of PHP 5.5 for various reasons. Lazycurl provides a secure approach in using @-prefix and extends its capability from local file to HTTP URL.
+The @-prefix usage in PHP CURL was once a handy method for uploading file in HTTP POST requests. It was deprecated as of PHP 5.5 for various reasons. LazyCurl provides a secure approach in using @-prefix and extends its capability from local file to HTTP URL.
 
 ## Features
 * Simplify HTTP CURL requests.
@@ -32,7 +32,7 @@ The @-prefix usage in PHP CURL was once a handy method for uploading file in HTT
 * PHP 7.1.0 with CURL Library 7.51.0
 
 ## Examples
-Lazycurl comes with 6 examples to show you how to use all 11 methods in different scenarios. Simply upload to web server and open in browser to see them in live.
+LazyCurl comes with 6 examples to show you how to use all 11 methods in different scenarios. Simply upload to web server and open in browser to see them in live.
 * http_get_basic.php - *get response, log and cookie from a simple HTTP GET request*
 * http_get_advanced.php - *enable cookie, setting CURL options and reset to default*
 * http_post_basic.php - *send HTTP POST request with an associative multi-dimensional array*
@@ -41,7 +41,7 @@ Lazycurl comes with 6 examples to show you how to use all 11 methods in differen
 * file_cookie.php - *save persistent cookie to local file*
 
 ## Notes
-Additional notes are embedded the PHP class. It is strongly recommended you read them carefully to fully understand its capabilities and limitations.
+Additional notes are embedded in the PHP class. It is strongly recommended you read them carefully to fully understand its capabilities and limitations.
 
 ## License
 The contents of this repository is released under the [MIT license](http://opensource.org/licenses/MIT).
