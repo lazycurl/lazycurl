@@ -33,12 +33,12 @@ The @-prefix usage in PHP CURL was once a handy method for uploading file in HTT
 
 ## Examples
 Lazycurl comes with 6 examples to show you how to use all 11 methods in different scenarios. Simply upload to web server and open in browser to see them in live.
-* http_get_basic.php - get response, log and cookie from a simple HTTP GET request
-* http_get_advanced.php - enable cookie, setting CURL options and reset to default
-* http_post_basic.php - send HTTP POST request with an associative multi-dimensional array
-* http_post_advanced.php - uploading local and remote file using @-prefix
-* file_transfer.php - stream download HTTP file and stream upload to FTP server
-* file_cookie.php - save persistent cookie to local file
+* http_get_basic.php  -  get response, log and cookie from a simple HTTP GET request
+* http_get_advanced.php  -  enable cookie, setting CURL options and reset to default
+* http_post_basic.php  -  send HTTP POST request with an associative multi-dimensional array
+* http_post_advanced.php  -  uploading local and remote file using @-prefix
+* file_transfer.php  -  stream download HTTP file and stream upload to FTP server
+* file_cookie.php  -  save persistent cookie to local file
 
 ## Notes
 Additional notes are embedded in lazycurl.php. It is strongly recommended you read them carefully to fully understand its capabilities and limitations.
