@@ -1,5 +1,5 @@
 ## LazyCurl
-A PHP class which brings back @-prefix usage in CURL requests to live, even in PHP 7. <http:// lazycurl.net/>
+A PHP class which brings back @-prefix usage in CURL requests to live, even in PHP 7. <http://lazycurl.net/>
 
 ## About
 The [PHP CURL library](http://php.net/manual/book.curl.php) is an extremely powerful tool supporting a wide range of protocols. Yet it may be too powerful that there are [over 140 customizable options](http://php.net/manual/function.curl-setopt.php) and some of them are affecting one another. Lazycurl is developed to provide an easy-to-use interface for most HTTP requests.
