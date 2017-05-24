@@ -18,16 +18,16 @@ The @-prefix usage in PHP CURL was once a handy method for uploading file in HTT
 * Only 11 methods to achieve everything above.
 
 ## System Requirement
-* PHP 5.3+ (recommended 5.5+ for better @-prefix handling)
-* CURL Library 7.19.4+ (recommended 7.34+ for better security with TLS 1.1 / 1.2)
-* [PHP Fileinfo extension](http://php.net/manual/book.fileinfo.php) (optional for mime type detection)
-* [PHP OpenSSL extension](http://php.net/manual/book.openssl.php) (required for secure connections)
+* PHP 5.3+ *(recommended 5.5+ for better @-prefix handling)*
+* CURL Library 7.19.4+ *(recommended 7.34+ for better security with TLS v1.1 / v1.2)*
+* [PHP Fileinfo extension](http://php.net/manual/book.fileinfo.php) *(optional for mime type detection)*
+* [PHP OpenSSL extension](http://php.net/manual/book.openssl.php) *(required for secure connections)*
 * Read / Write permission is required for persistent cookies and temporary downloaded files
 
 ## Tested Environment
-* PHP 5.3.0 with CURL Library 7.19.4
-* PHP 5.4.0 with CURL Library 7.24.0
-* PHP 5.5.0 with CURL Library 7.30.0
+* PHP 5.3.0 with CURL Library 7.19.4 *(target server may reject SSL v2 / v3 due to known vulnerabilities)*
+* PHP 5.4.0 with CURL Library 7.24.0 *(target server may reject SSL v2 / v3 due to known vulnerabilities)*
+* PHP 5.5.0 with CURL Library 7.30.0 *(target server may reject SSL v2 / v3 due to known vulnerabilities)*
 * PHP 5.6.0 with CURL Library 7.36.0
 * PHP 7.0.0 with CURL Library 7.43.0
 * PHP 7.1.0 with CURL Library 7.51.0
