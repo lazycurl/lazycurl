@@ -406,7 +406,7 @@ class LazyCurl {
 			"CURLOPT_SSL_VERIFYPEER" => true,											# (ssl) enable ca root certificate checking
 			"CURLOPT_SSL_VERIFYHOST" => 2,												# (ssl) enable hostname checking in ssl certification
 			"CURLOPT_SSLVERSION" => 0,													# (ssl) default behaviour in curl library is detecting most secure version supported at both ends
-			"CURLOPT_CAINFO" => dirname(getcwd()).DIRECTORY_SEPARATOR."cacert.pem",		# (ssl) updated ca root certificate (revision 2017-01-18 downloaded from https://curl.haxx.se/docs/caextract.html)
+			"CURLOPT_CAINFO" => __DIR__.DIRECTORY_SEPARATOR."cacert.pem",				# (ssl) updated ca root certificate (revision 2017-01-18 downloaded from https://curl.haxx.se/docs/caextract.html)
 			"CURLOPT_SAFE_UPLOAD" => true,												# (method, locked) better approach for file upload operation since php v5.5.0
 			"CURLOPT_PROTOCOLS" => CURLPROTO_HTTP | CURLPROTO_HTTPS | CURLPROTO_FTP,	# (request, locked) allow specified protocols only
 			"CURLOPT_ENCODING" => "",													# (response) enable all supported compression
@@ -428,6 +428,7 @@ class LazyCurl {
 			$this->options["CURLOPT_SSL_VERIFYPEER"] = false;
 			unset($this->options["CURLOPT_CAINFO"]);
 		}
+		elseif (!file_exists($this->options["CURLOPT_CAINFO"])) { unset($this->options["CURLOPT_CAINFO"]); }					# rename or delete the ca root certificate file in order to use system default
 		# ignore safe upload if not supported, this option is added in php 5.5 and removed in php 7.0
 		if (version_compare(phpversion(), "5.5.0", "<") || version_compare(phpversion(), "7.0.0", ">=")) { unset($this->options["CURLOPT_SAFE_UPLOAD"]); }
 		# Initialize Curl Session
@@ -680,7 +681,7 @@ class LazyCurl {
 			"CURLOPT_SSL_VERIFYPEER" => true,											# (ssl) enable ca root certificate checking
 			"CURLOPT_SSL_VERIFYHOST" => 2,												# (ssl) enable hostname checking in ssl certification
 			"CURLOPT_SSLVERSION" => 0,													# (ssl) default behaviour in curl library is detecting most secure version supported at both ends
-			"CURLOPT_CAINFO" => dirname(getcwd()).DIRECTORY_SEPARATOR."cacert.pem",		# (ssl) updated ca root certificate (revision 2017-01-18 downloaded from https://curl.haxx.se/docs/caextract.html)
+			"CURLOPT_CAINFO" => __DIR__.DIRECTORY_SEPARATOR."cacert.pem",				# (ssl) updated ca root certificate (revision 2017-01-18 downloaded from https://curl.haxx.se/docs/caextract.html)
 			"CURLOPT_PROTOCOLS" => CURLPROTO_HTTP | CURLPROTO_HTTPS | CURLPROTO_FTP,	# (request) allow specified protocols only
 			"CURLOPT_ENCODING" => "",													# (response) enable all supported compression
 			"CURLOPT_FAILONERROR" => false,												# (response) always returns response even if response is http 4xx-5xx error
@@ -699,6 +700,7 @@ class LazyCurl {
 			$tmp_options["CURLOPT_SSL_VERIFYPEER"] = false;
 			unset($tmp_options["CURLOPT_CAINFO"]);
 		}
+		elseif (!file_exists($tmp_options["CURLOPT_CAINFO"])) { unset($tmp_options["CURLOPT_CAINFO"]); }						# rename or delete the ca root certificate file in order to use system default
 		# begin download
 		$tmp_ch = curl_init();
 		foreach ($tmp_options as $key => $value) {
