@@ -25,9 +25,9 @@ The @-prefix usage in PHP CURL was once a handy method for uploading file in HTT
 * Read / Write permission is required for persistent cookies and temporary downloaded files
 
 ## Tested Environment
-* PHP 5.3.0 with CURL Library 7.19.4 *(target server may reject SSL v2 / v3 due to known vulnerabilities)*
-* PHP 5.4.0 with CURL Library 7.24.0 *(target server may reject SSL v2 / v3 due to known vulnerabilities)*
-* PHP 5.5.0 with CURL Library 7.30.0 *(target server may reject SSL v2 / v3 due to known vulnerabilities)*
+* PHP 5.3.0 with CURL Library 7.19.4 *(target server may reject SSL v2 / v3 due to [known vulnerability](https://drownattack.com/))*
+* PHP 5.4.0 with CURL Library 7.24.0 *(target server may reject SSL v2 / v3 due to [known vulnerability](https://drownattack.com/))*
+* PHP 5.5.0 with CURL Library 7.30.0 *(target server may reject SSL v2 / v3 due to [known vulnerability](https://drownattack.com/))*
 * PHP 5.6.0 with CURL Library 7.36.0
 * PHP 7.0.0 with CURL Library 7.43.0
 * PHP 7.1.0 with CURL Library 7.51.0
