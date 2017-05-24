@@ -21,6 +21,7 @@ The @-prefix usage in PHP CURL was once a handy method for uploading file in HTT
 * PHP 5.3+ (recommended 5.5+ for better @-prefix handling)
 * CURL Library 7.19.4+ (recommended 7.34+ for better security with TLS 1.1 / 1.2)
 * [PHP Fileinfo extension](http://php.net/manual/book.fileinfo.php) (optional for mime type detection)
+* [PHP OpenSSL extension](http://php.net/manual/book.openssl.php) (required for secure connections)
 * Read / Write permission is required for persistent cookies and temporary downloaded files
 
 ## Tested Environment
