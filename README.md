@@ -29,7 +29,7 @@ The @-prefix usage in PHP CURL was once a handy method for uploading file in HTT
 * PHP 5.4.0 with CURL Library 7.24.0 *(destination may reject SSL v2 / v3 connections due to [known vulnerability](https://drownattack.com/))*
 * PHP 5.5.0 with CURL Library 7.30.0 *(destination may reject SSL v2 / v3 connections due to [known vulnerability](https://drownattack.com/))*
 * PHP 5.6.0 with CURL Library 7.36.0
-* PHP 7.0.3 with CURL Library 7.46.0 *(fatal error due to a [bug](https://bugs.php.net/bug.php?id=71225) since PHP 7.0.0, fixed in 7.0.3)*
+* PHP 7.0.3 with CURL Library 7.46.0 *(fatal error due to a [bug #71225](https://bugs.php.net/bug.php?id=71225) since PHP 7.0.0, fixed in 7.0.3)*
 * PHP 7.1.0 with CURL Library 7.51.0
 
 ## Examples
