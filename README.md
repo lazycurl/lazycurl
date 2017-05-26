@@ -1,4 +1,4 @@
-# LazyCurl  <a href="https://travis-ci.org/lazycurl/lazycurl" target="_blank"><img src="https://travis-ci.org/lazycurl/lazycurl.svg?branch=master"></a>
+# LazyCurl  [![Build Status](https://travis-ci.org/lazycurl/lazycurl.svg?branch=master)](https://travis-ci.org/lazycurl/lazycurl)
 A PHP class which brings back @-prefix usage in CURL requests to live, even in PHP 7. <http://lazycurl.net/>
 
 ## About
