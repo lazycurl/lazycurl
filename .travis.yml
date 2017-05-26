@@ -6,4 +6,4 @@ php:
   - '5.6'
   - '7.0'
   - '7.1'
-script: phpunit lazycurl.php
+script: phpunit travis-test.php
