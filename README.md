@@ -6,6 +6,29 @@ The [PHP CURL library](http://php.net/manual/book.curl.php) is an extremely powe
 
 The @-prefix usage in PHP CURL was once a handy method for uploading file in HTTP POST requests. It was deprecated as of PHP 5.5 for various reasons. LazyCurl provides a secure approach in using @-prefix and extends its capability from local file to HTTP URL.
 
+## How To Use @-prefix With LazyCurl
+For example, if you want to upload some files with form data:
+
+```php
+$fields = array(
+	'username' => 'John Smith',
+	'email' => 'john.smith@example.com',
+	'photo' => '@/local/path/photo.jpg',
+	'application' => '@http://example.com/user/john.smith/signed.pdf',
+	'twitter' => '@john.smith.does.not.exist'
+);
+$files = array(
+	'@/local/path/photo.jpg',
+	'@http://example.com/user/john.smith/signed.pdf'
+);
+
+$curl = new LazyCurl();
+$curl->exec('https://example.com/path/to/target.php', 'POST', $fields, $files);
+$curl->close();
+```
+
+That's it. The target PHP will receive text fields 'username', 'email' and 'twitter', together with 2 uploaded files.
+
 ## Features
 * Simplify HTTP CURL requests.
 * Default using the best SSL CURL options with [updated CA certificates](https://curl.haxx.se/docs/caextract.html).
