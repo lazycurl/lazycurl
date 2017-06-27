@@ -6,6 +6,17 @@ The [PHP CURL library](http://php.net/manual/book.curl.php) is an extremely powe
 
 The @-prefix usage in PHP CURL was once a handy method for uploading file in HTTP POST requests. It was deprecated as of PHP 5.5 for various reasons. LazyCurl provides a secure approach in using @-prefix and extends its capability from local file to HTTP URL.
 
+## Features
+* Simplify HTTP CURL requests.
+* Default using the best SSL CURL options with [updated CA certificates](https://curl.haxx.se/docs/caextract.html).
+* Logs HTTP requests being sent and captures responses including redirections.
+* Extracts all cookies from HTTP responses.
+* Supports multi-dimensional array in HTTP POST requests.
+* Provides @-prefix usage in PHP 5 and PHP 7 with @URL capability.
+* Streaming transfers large file without memory concern.
+* Supports FTP stream upload single file.
+* Only 11 methods to achieve everything above.
+
 ## How To Use @-prefix With LazyCurl
 For example, if you want to upload some files with form data:
 
@@ -28,17 +39,6 @@ $curl->close();
 ```
 
 That's it. The target PHP will receive text fields 'username', 'email' and 'twitter', together with 2 uploaded files.
-
-## Features
-* Simplify HTTP CURL requests.
-* Default using the best SSL CURL options with [updated CA certificates](https://curl.haxx.se/docs/caextract.html).
-* Logs HTTP requests being sent and captures responses including redirections.
-* Extracts all cookies from HTTP responses.
-* Supports multi-dimensional array in HTTP POST requests.
-* Provides @-prefix usage in PHP 5 and PHP 7 with @URL capability.
-* Streaming transfers large file without memory concern.
-* Supports FTP stream upload single file.
-* Only 11 methods to achieve everything above.
 
 ## System Requirement
 * PHP 5.3+ *(recommended 5.5+ for better @-prefix handling)*
