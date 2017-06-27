@@ -1,4 +1,4 @@
-theme: jekyll-theme-tactile
+theme: jekyll-theme-modernist
 title: LazyCurl
 description: A PHP class which brings back @-prefix usage in CURL requests to live, even in PHP 7.
 show_downloads: true
