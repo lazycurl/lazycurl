@@ -2,4 +2,13 @@
 ---
 
 @import "{{ site.theme }}";
+
+body { font-family: calibri, lato, tohama, arial; }
+header > h1 { font-size: 40px; }
+header > p { width: 760px; font-size: 17px; }
+header > ul:before { left: -2px; top: -1px; right: -2px; bottom: -3px; }
+header > ul a { height: 32px; }
 div.wrapper, footer { width: 800px; }
+div.wrapper > section > h1#lazycurl-- { font-size: 0px; margin: 0px; height: 0px; }
+div.wrapper > section > h1#lazycurl-- > a { position: relative; top: -92px; left: 148px; }
+div.wrapper > section > h1#lazycurl-- + p { font-size: 0px; margin: 0px; height: 0px; }
