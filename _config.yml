@@ -1,5 +1,5 @@
 theme: jekyll-theme-modernist
 title: LazyCurl
-description: A PHP class which brings back @-prefix usage in CURL requests to live, even in PHP 7. <a href="http://lazycurl.net/">http://lazycurl.net/</a>
+description: A PHP class which brings back @-prefix usage in CURL requests to live, even in PHP 7. <a href="http://lazycurl.net/" style="padding-left:5px;">http://lazycurl.net/</a>
 show_downloads: true
 google_analytics: UA-101781275-1
