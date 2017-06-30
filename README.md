@@ -20,6 +20,7 @@ The @-prefix usage in PHP CURL was once a handy method for uploading file in HTT
 ## How To Use @-prefix With LazyCurl
 For example, if you want to upload some files with form data:
 
+{% highlight php %}
 ```php
 $fields = array(
 	'username' => 'John Smith',
@@ -37,6 +38,7 @@ $curl = new LazyCurl();
 $curl->exec('https://example.com/path/to/target.php', 'POST', $fields, $files);
 $curl->close();
 ```
+{% endhighlight %}
 
 That's it. The target PHP will receive text fields 'username', 'email' and 'twitter', together with 2 uploaded files.
 
