@@ -9,6 +9,7 @@ header > h1 { font-size: 40px; }
 header > h1 > span { padding: 0px 15px; }
 header > h1 + p { width: auto; line-height: initial; font-size: 17px; margin: 3px 0px; }
 header > h1 + p > a { padding: 0px 5px; }
+header > p.view { margin-top: 6px; }
 header > ul:before { left: -2px; top: 0px; right: -2px; bottom: -3px; }
 header > ul a { height: 32px; }
 
