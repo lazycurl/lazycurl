@@ -7,12 +7,12 @@ body { font-family: calibri, lato, tohama, arial; background: url("../images/che
 
 header > h1 { font-size: 40px; }
 header > h1 > span { padding: 0px 15px; }
-header > h1 + p { width: 760px; font-size: 17px; }
+header > h1 + p { width: auto; font-size: 17px; }
 header > h1 + p > a { padding: 0px 5px; }
 header > ul:before { left: -2px; top: 0px; right: -2px; bottom: -3px; }
 header > ul a { height: 32px; }
 
-div.wrapper, footer { width: 800px; }
+div.wrapper, footer { max-width: 800px; width: auto; }
 
 div.wrapper > section { padding-top: 25px; }
 
