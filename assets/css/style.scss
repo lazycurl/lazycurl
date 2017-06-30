@@ -12,7 +12,7 @@ header > h1 + p > a { padding: 0px 5px; }
 header > ul:before { left: -2px; top: 0px; right: -2px; bottom: -3px; }
 header > ul a { height: 32px; }
 
-div.wrapper, footer { max-width: 800px; }
+div.wrapper, footer { width: 800px; }
 
 div.wrapper > section { padding-top: 25px; }
 
