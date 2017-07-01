@@ -6,4 +6,7 @@ php:
   - '5.6'
   - '7.0'
   - '7.1'
-script: phpunit travis-test.php
+script:
+  - phpunit travis-test.php
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
