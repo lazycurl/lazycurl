@@ -7,6 +7,6 @@ php:
   - '7.0'
   - '7.1'
 script:
-  - vendor/bin/phpunit travis-test.php --coverage-clover=coverage.xml
+  - phpunit travis-test.php --coverage-clover=coverage.xml
 after_success:
   - bash <(curl -s https://codecov.io/bash)
