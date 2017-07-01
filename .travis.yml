@@ -1,10 +1,8 @@
 language: php
-sudo: enabled
 php:
   - '5.6'
-before_script:
-  - pip install coverage
 script:
   - phpunit travis-test.php --coverage-clover=coverage.xml
+  - find / ! -readable -prune -o -name "coverage.xml" -print
 after_success:
   - bash <(curl -s https://codecov.io/bash)
