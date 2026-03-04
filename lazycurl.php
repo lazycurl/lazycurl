@@ -444,8 +444,8 @@ class LazyCurl {
 		}
 		elseif (!file_exists($this->options["CURLOPT_CAINFO"])) { unset($this->options["CURLOPT_CAINFO"]); }					# rename or delete the ca root certificate file in order to use system default
 		# downgrade to tlsv1 in curl library before v7.34.0, or tlsv1_2 in curl library before v7.52.0 (the default behaviour may vary so better set explicitly)
-		if (version_compare($curl_version["version"], "7.34.0", "<")) { $tmp_options["CURLOPT_SSLVERSION"] = 1; }
-		elseif (version_compare($curl_version["version"], "7.52.0", "<")) { $tmp_options["CURLOPT_SSLVERSION"] = 6; }
+		if (version_compare($curl_version["version"], "7.34.0", "<")) { $this->options["CURLOPT_SSLVERSION"] = 1; }
+		elseif (version_compare($curl_version["version"], "7.52.0", "<")) { $this->options["CURLOPT_SSLVERSION"] = 6; }
 		# ignore safe upload if not supported, this option is added in php 5.5 and removed in php 7.0
 		if (version_compare(phpversion(), "5.5.0", "<") || version_compare(phpversion(), "7.0.0", ">=")) { unset($this->options["CURLOPT_SAFE_UPLOAD"]); }
 		# Initialize Curl Session
@@ -764,4 +764,5 @@ class LazyCurl {
 
 
 ?>
+
 
