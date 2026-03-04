@@ -152,7 +152,7 @@ class LazyCurl {
 		$this->data = curl_exec($this->ch);
 		if (curl_errno($this->ch)) { $this->data = "(".curl_errno($this->ch).") ".curl_error($this->ch); }
 		# reset referer
-		if (isset($this->options["CURLOPT_REFERER"])) { $this->set_opt(array("CURLOPT_REFERER" => null)); }
+		if (isset($this->options["CURLOPT_REFERER"])) { $this->set_opt(array("CURLOPT_REFERER" => "")); }
 		# delete temp files
 		foreach ($this->tmp_files as $tmp_file) {
 			if (file_exists($tmp_file)) { unlink($tmp_file); }
@@ -192,7 +192,7 @@ class LazyCurl {
 		else {
 			# initialize variables for current request
 			$new_file = null;
-			$tmp_file = tempnam("temp", "lc_");
+			$tmp_file = (file_exists(rtrim(getcwd(), "/")."/temp") && $this->is_writable(rtrim(getcwd(), "/")."/temp")) ? tempnam("temp", "lc_") : tempnam(sys_get_temp_dir(), "lc_");
 			$tmp_fp = fopen($tmp_file, "w");
 			# temporary curl options for downloading file
 			$old_options = array_merge(array("CURLOPT_FILE" => fopen("php://stdout", "w")), $this->options);
@@ -432,7 +432,7 @@ class LazyCurl {
 			"CURLOPT_CONNECTTIMEOUT" => 15,												# (timeout) connection timeout
 			"CURLOPT_TIMEOUT" => 45,													# (timeout) request timeout
 			"CURLOPT_REFERER" => "",													# (header) always begins with direct access
-			"CURLOPT_USERAGENT" => "LazyCurl/1.0",										# (header) default user agent
+			"CURLOPT_USERAGENT" => "LazyCurl/1.4",										# (header) default user agent
 			"CURLOPT_HEADERFUNCTION" => array($this, "header_handler"),					# (header, locked) callback function to extract incoming header
 			"CURLINFO_HEADER_OUT" => true,												# (header, locked) dump outgoing header to curlinfo
 		);
@@ -690,7 +690,7 @@ class LazyCurl {
 	#		@return void
 	private function get_file(&$remote_file, &$post_name, &$mime_type) {
 		$tmp_name = $tmp_type = null;
-		$tmp_file = tempnam("temp", "lc_");
+		$tmp_file = (file_exists(rtrim(getcwd(), "/")."/temp") && $this->is_writable(rtrim(getcwd(), "/")."/temp")) ? tempnam("temp", "lc_") : tempnam(sys_get_temp_dir(), "lc_");
 		$tmp_fp = fopen($tmp_file, "w");
 		$mem_fp = fopen("php://temp", "w+");
 		$this->tmp_files[] = $tmp_file;
@@ -764,3 +764,4 @@ class LazyCurl {
 
 
 ?>
+
