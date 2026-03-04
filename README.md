@@ -1,4 +1,4 @@
-# LazyCurl  [![Build Status](https://travis-ci.org/lazycurl/lazycurl.svg?branch=master)](https://travis-ci.org/lazycurl/lazycurl)
+# LazyCurl
 A PHP class which brings back @-prefix usage in CURL requests to live, even in PHP 7. <http://lazycurl.net/>
 
 ## About
@@ -43,7 +43,7 @@ That's it. The target PHP will receive text fields 'username', 'email' and 'twit
 
 ## System Requirement
 * PHP 5.3+ *(recommended 5.5+ for better @-prefix handling)*
-* CURL Library 7.19.4+ *(recommended 7.34+ for better security with TLS v1.1 / v1.2)*
+* CURL Library 7.19.4+ *(recommended 7.52+ for better security with TLS v1.3)*
 * [PHP Fileinfo extension](http://php.net/manual/book.fileinfo.php) *(optional for mime type detection)*
 * [PHP OpenSSL extension](http://php.net/manual/book.openssl.php) *(required for secure connections)*
 * Read / Write permission is required for persistent cookies and temporary downloaded files
