@@ -1,7 +1,7 @@
 <?php
 
 /*
-LazyCurl v1.4
+LazyCurl v1.5
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 MIT License
@@ -33,6 +33,7 @@ History:
 						- Change ssl version to use tlsv1_2 in curl v7.34.0+, or tlsv1 in earlier version. The default behaviour will use sslv2 or sslv3 even if connection is normally rejected by target nowadays.
 	2017-07-01. v1.2	- Support sending string value without modification in custom request.
 	2026-03-27. v1.4	- Clear http referer if an empty string is set. Change default ssl version to tlsv1_2+ in curl v7.34.0+, or tlsv1+ in earlier version.
+	2026-06-20. v1.5	- Built-in function "is_writable" may generate false negatives on some file systems. Try creating a temporary file is the only reliable method.
 
 System Requirement:
 	1. php v5.3.0+
@@ -349,7 +350,8 @@ class LazyCurl {
 	public function set_opt($custom_options = array()) {
 		$debug_backtrace = debug_backtrace();
 		$this_file = __FILE__;
-		if (!empty($debug_backtrace[0]["file"]) && !empty($this_file) && ($debug_backtrace[0]["file"] == $this_file)) { $internal = true; } else { $internal = false; }
+		if (!empty($debug_backtrace[0]["file"]) && !empty($this_file) && ($debug_backtrace[0]["file"] == $this_file)) { $internal = true; }
+		else { $internal = false; }
 		foreach ($custom_options as $key => $value) {
 			if (!is_string($key)) { trigger_error("curl option name must be string instead of default php constant", E_USER_WARNING); }
 			elseif (!defined($key)) {
@@ -362,9 +364,7 @@ class LazyCurl {
 			elseif (!$internal && in_array($key, array("CURLOPT_SAFE_UPLOAD", "CURLOPT_PROTOCOLS", "CURLOPT_RETURNTRANSFER", "CURLOPT_HEADERFUNCTION", "CURLINFO_HEADER_OUT"))) {
 				trigger_error("'{$key}' option is locked in this class to ensure functionalities", E_USER_WARNING);
 			}
-			else {
-				if (curl_setopt($this->ch, constant($key), $value)) { $this->options[$key] = $value; }
-			}
+			elseif (curl_setopt($this->ch, constant($key), $value)) { $this->options[$key] = $value; }
 		}
 	}
 
@@ -469,11 +469,25 @@ class LazyCurl {
 	#		@param string	$file				absolute local path of a file or directory
 	#		@return boolean						true if file can be created or updated, false otherwise
 	# note:
-	#		1. php built-in function "is_writable" always return false if file not exists, and therefore cannot be used to check if a file can be created or not
+	#		1. php built-in function "is_writable" may generate false negatives on some file systems
 	#		2. this function checks if a new file can be created or existing file can be updated
 	#		3. it also check if a new file can be created within a directory which is passed as parameter
 	private function is_writable($file) {
-		if (file_exists($file) || is_dir($file)) { return is_writable($file); } else { return is_writable(dirname($file)); }
+		if (file_exists($file) && (!is_dir($file))) { return is_writable($file); }
+		else {
+			$path = (!is_dir($file)) ? dirname($file) : $file;
+			do {
+				$file = $path.DIRECTORY_SEPARATOR.uniqid("lazycurl.", true).".txt";
+			} while (file_exists($file));
+			if (@file_put_contents($file, time()) > 0) {
+				unlink($file);
+				return true;
+			}
+			else {
+				error_clear_last();
+				return false;
+			}
+		}
 	}
 
 
@@ -641,7 +655,8 @@ class LazyCurl {
 			$this_key = (empty($parent_key)) ? $key : $parent_key."[{$key}]";
 			if (is_array($value)) {
 				$this_value = $this->array_flatten_recursive($value, $this_key);
-				if (!empty($this_value)) { $output_value = array_merge($output_value, $this_value); } else { $output_value[$this_key] = null; }
+				if (!empty($this_value)) { $output_value = array_merge($output_value, $this_value); }
+				else { $output_value[$this_key] = null; }
 			}
 			else { $output_value[$this_key] = $value; }
 		}
