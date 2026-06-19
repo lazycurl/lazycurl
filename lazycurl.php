@@ -432,7 +432,7 @@ class LazyCurl {
 			"CURLOPT_CONNECTTIMEOUT" => 15,												# (timeout) connection timeout
 			"CURLOPT_TIMEOUT" => 45,													# (timeout) request timeout
 			"CURLOPT_REFERER" => "",													# (header) always begins with direct access
-			"CURLOPT_USERAGENT" => "LazyCurl/1.4",										# (header) default user agent
+			"CURLOPT_USERAGENT" => "LazyCurl/1.5",										# (header) default user agent
 			"CURLOPT_HEADERFUNCTION" => array($this, "header_handler"),					# (header, locked) callback function to extract incoming header
 			"CURLINFO_HEADER_OUT" => true,												# (header, locked) dump outgoing header to curlinfo
 		);
