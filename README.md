@@ -55,6 +55,7 @@ That's it. The target PHP will receive text fields 'username', 'email' and 'twit
 * PHP 5.6.0 with CURL Library 7.36.0
 * PHP 7.0.3 with CURL Library 7.46.0 *(fatal error due to a [PHP bug #71225](https://bugs.php.net/bug.php?id=71225) since 7.0.0, fixed in 7.0.3)*
 * PHP 7.1.0 with CURL Library 7.51.0
+* PHP 7.4.33 with CURL Library 7.74.0
 
 ## Examples
 LazyCurl comes with 6 examples to show you how to use all 11 methods in different scenarios. Simply upload to web server and open in browser to see them in live.
