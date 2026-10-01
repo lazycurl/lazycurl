@@ -1,7 +1,7 @@
 <?php
 
 /*
-LazyCurl v1.0 (2017-05-21)
+LazyCurl v1.1 (2026-10-01)
 Example performing a series of http get requests with different curl options.
 */
 
@@ -70,8 +70,8 @@ echo "</style>\r\n";
 
 	echo "<fieldset style='background-color:rgb(".mt_rand(230,250).",".mt_rand(230,250).",".mt_rand(230,250).");'>\r\n";
 	echo "<b><span># CHANGE CURL OPTIONS (similar to curl_setopt except using string as option name)</span></b>\r\n";
-	echo "<b>\$curl->set_opt(array('CURLOPT_HTTPHEADER' => array('Accept-Language: en-US', 'Cache-Control: no-cache', 'Pragma: no-cache'), 'CURLOPT_REFERER' => 'http://example.com'));</b>\r\n";
-	$curl->set_opt(array('CURLOPT_HTTPHEADER' => array('Accept-Language: en-US', 'Cache-Control: no-cache', 'Pragma: no-cache'), 'CURLOPT_REFERER' => 'http://example.com'));
+	echo "<b>\$curl->set_opt(array('CURLOPT_HTTPHEADER' => array('Accept-Language: en-US', 'Cache-Control: no-cache', 'Pragma: no-cache'), 'CURLOPT_REFERER' => 'https://example.com'));</b>\r\n";
+	$curl->set_opt(array('CURLOPT_HTTPHEADER' => array('Accept-Language: en-US', 'Cache-Control: no-cache', 'Pragma: no-cache'), 'CURLOPT_REFERER' => 'https://example.com'));
 	echo "\r\n";
 
 	echo "<b><span># SENDING HTTP GET REQUEST TO URL FOR THE SECOND TIME</span></b>\r\n";
