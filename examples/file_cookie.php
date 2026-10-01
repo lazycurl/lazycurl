@@ -1,14 +1,14 @@
 <?php
 
 /*
-LazyCurl v1.0 (2017-05-21)
+LazyCurl v1.1 (2026-10-01)
 Example using file cookie.
 */
 
 error_reporting(E_ALL);
 $self = (isset($_SERVER["HTTPS"]) ? "https://" : "http://").$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"];
 $title = trim(substr($self, strrpos($self, "/")), "/");
-$url = "http://www.wikipedia.org/wiki/HTTP_cookie";
+$url = "https://www.wikipedia.org/wiki/HTTP_cookie";
 $file = "./cookies/file_cookie.txt";
 
 if (function_exists("curl_version")) { $curl_version = curl_version(); $curl_version = $curl_version["version"]; } else { $curl_version = "disabled"; }
