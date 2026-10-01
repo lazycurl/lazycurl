@@ -1,15 +1,15 @@
 <?php
 
 /*
-LazyCurl v1.0 (2017-05-21)
+LazyCurl v1.1 (2026-10-01)
 Example performing http download and ftp upload.
 */
 
 error_reporting(E_ALL);
 $self = (isset($_SERVER["HTTPS"]) ? "https://" : "http://").$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"];
 $title = trim(substr($self, strrpos($self, "/")), "/");
-$url_dl = "http://speedtest.tele2.net/1MB.zip";
-$url_ul = "ftp://speedtest.tele2.net/upload/";
+$url_dl = "https://speedtest.tele2.lt/1MB.zip";
+$url_ul = "ftp://demo:demo@demo.wftpserver.com/upload/";
 
 if (function_exists("curl_version")) { $curl_version = curl_version(); $curl_version = $curl_version["version"]; } else { $curl_version = "disabled"; }
 
