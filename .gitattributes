@@ -1,3 +1,4 @@
+/.github export-ignore
 /_layouts export-ignore
 /assets export-ignore
 .gitattributes export-ignore
@@ -5,3 +6,4 @@
 .travis.yml export-ignore
 _config.yml export-ignore
 travis-test.php export-ignore
+workflow-test.php export-ignore
