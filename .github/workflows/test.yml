@@ -28,12 +28,16 @@ jobs:
         image: delfer/alpine-ftp-server:latest
         ports:
           - 21:21
-          - 21000-21010:21000-21010
+          - 21001:21001
+          - 21002:21002
+          - 21003:21003
+          - 21004:21004
+          - 21005:21005
         env:
           USERS: "testuser|hrXVjPwMj8NuFkZW"
           ADDRESS: 127.0.0.1
-          MIN_PORT: 21000
-          MAX_PORT: 21010
+          MIN_PORT: 21001
+          MAX_PORT: 21015
 
     steps:
       - name: Checkout Code
