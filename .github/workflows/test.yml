@@ -25,7 +25,7 @@ jobs:
     services:
       # Lightweight background FTP server container for local access
       ftp:
-        image: delfer/ftp-server:latest
+        image: delfer/alpine-ftp-server:latest
         ports:
           - 21:21
           - 21000-21010:21000-21010
