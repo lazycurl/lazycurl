@@ -1,0 +1,50 @@
+name: LazyCurl Test
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        # Full coverage matrix from v5.3 to v8.4
+        php-version: ['5.3', '5.4', '5.5', '5.6', '7.0', '7.1', '7.2', '7.3', '7.4', '8.0', '8.1', '8.2', '8.3', '8.4']
+
+    services:
+      # Lightweight background FTP server container for local access
+      ftp:
+        image: delfer/ftp-server:latest
+        ports:
+          - 21:21
+          - 21000-21010:21000-21010
+        env:
+          FTP_USER: testuser
+          FTP_PASS: testpass
+          PASV_ADDRESS: 127.0.0.1
+          PASV_MIN_PORT: 21000
+          PASV_MAX_PORT: 21010
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP v${{ matrix.php-version }}
+        uses: actions/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: curl, fileinfo, openssl
+          coverage: none
+
+      - name: Execute Test
+        env:
+          FTP_HOST: 127.0.0.1
+          FTP_PORT: 21
+          FTP_USER: testuser
+          FTP_PASS: testpass
+        run: php workflow-test.php
