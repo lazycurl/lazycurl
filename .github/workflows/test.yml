@@ -4,6 +4,7 @@ on:
   push:
     branches: [ "master" ]
     paths:
+      - '.github/workflows/test.yml'
       - 'lazycurl.php'
       - 'workflow-test.php'
 
