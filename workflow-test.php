@@ -17,6 +17,7 @@ $exit = 1111;
 $curl_version = curl_version();
 $scheme = (version_compare($curl_version["version"], "7.34.0", ">=")) ? "https" : "http";
 if (!file_exists("./temp")) { mkdir("./temp", 0755); }
+echo ">> Environment: php/".phpversion()." curl/".$curl_version["version"]."\r\n";
 
 
 
