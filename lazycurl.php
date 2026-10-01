@@ -1,12 +1,12 @@
 <?php
 
 /*
-LazyCurl v1.5
+LazyCurl v1.6
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 MIT License
 
-Copyright (c) 2017 http://lazycurl.net/
+Copyright (c) 2017 https://lazycurl.net/
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -34,6 +34,8 @@ History:
 	2017-07-01. v1.2	- Support sending string value without modification in custom request.
 	2026-03-27. v1.4	- Clear http referer if an empty string is set. Change default ssl version to tlsv1_2+ in curl v7.34.0+, or tlsv1+ in earlier version.
 	2026-06-20. v1.5	- Built-in function "is_writable" may generate false negatives on some file systems. Try creating a temporary file is the only reliable method.
+	2026-09-30. v1.6	- Extend compatibility up to php v8.4 based on changes and deprecations in 8 series.
+						- Hostname to ip resolution now default to ipv4 for better compatibility.
 
 System Requirement:
 	1. php v5.3.0+
@@ -66,11 +68,11 @@ Note - @ Prefix Upload Compatibility:
 	5. Any @ prefix string missing in parameter 4 when calling $this->exec() will be considered as posting a string value instead of file upload.
 	6. CURLFile object will be used for file upload if php is v5.5.0+. For earlier php version, a space will be prepended when posting a string value which begins with "@".
 	7. When using CURLFile object, mime type will be automatically detected if not specified. But php fileinfo module is required though.
-	8. Using http / ftp url in @ prefix is supported, e.g. "@http://www.example.com/favicon.ico". Additional curl session will be created instead of using file_get_contents which can be limited by "allow_url_fopen".
+	8. Using http / ftp url in @ prefix is supported, e.g. "@https://www.example.com/favicon.ico". Additional curl session will be created instead of using file_get_contents which can be limited by "allow_url_fopen".
 
 Note - Direct Download:
 	1. Downloading single file from http / ftp is supported. Streaming transfer is always used in order to support downloading large file with low memory consumption.
-	2. It is recommended to specify a file name when downloading from dynamic link, e.g. "http://forum.example.com/attachment.php?file_id=734550".
+	2. It is recommended to specify a file name when downloading from dynamic link, e.g. "https://forum.example.com/attachment.php?file_id=734550".
 	3. File name can be automatically extracted from either "Content-Disposition" header or the url itself. Otherwise, a temp file name will be used.
 	4. Unix timestamp will be added to the end of file name if already exists, unless overwrite mode is specified.
 
@@ -100,8 +102,8 @@ class LazyCurl {
 
 	# check system requirements before initializing variables and session
 	function __construct() {
-		if (version_compare(phpversion(), "5.3.0", "<")) { trigger_error("php v5.3.0 or above is required", E_USER_ERROR); }
-		if (!function_exists("curl_version")) { trigger_error("curl library is not enabled", E_USER_ERROR); }
+		if (version_compare(phpversion(), "5.3.0", "<")) { throw new CompileError("php v5.3.0 or above is required");; }
+		if (!function_exists("curl_version")) { throw new CompileError("curl library is not enabled"); }
 		$this->init();
 	}
 
@@ -114,12 +116,12 @@ class LazyCurl {
 	#		@param array	$manifest			list of files to be uploaded except http get request
 	#		@return void
 	public function exec($url, $method = "GET", $fields = array(), $manifest = array()) {
-		if (!is_resource($this->ch)) {								# automatically initialize curl session if it is closed
+		if (!is_resource($this->ch) && !($this->ch instanceof CurlHandle)) {								# automatically initialize curl session if it is closed
 			$this->init();
-			if (!is_resource($this->ch)) { trigger_error("curl session cannot be initialized", E_USER_ERROR); }										# stop processing if curl session cannot be initialized
+			if (!is_resource($this->ch) && !($this->ch instanceof CurlHandle)) { throw new TypeError ("curl session cannot be initialized"); }		# stop processing if curl session cannot be initialized
 		}
-		elseif (!is_array($fields)) { trigger_error("exec() expects parameter 3 to be associative array", E_USER_ERROR); }							# array is required
-		elseif (!is_array($manifest)) { trigger_error("exec() expects parameter 4 to be array", E_USER_ERROR); }									# array is required
+		elseif (!is_array($fields)) { throw new TypeError ("exec() expects parameter 3 to be associative array"); }									# array is required
+		elseif (!is_array($manifest)) { throw new TypeError ("exec() expects parameter 4 to be array"); }											# array is required
 		# initialize variables for current request
 		$this->data = "";
 		$this->location_idx = -1;
@@ -161,7 +163,7 @@ class LazyCurl {
 		# consolidate detail log for current execution
 		$curlinfo = curl_getinfo($this->ch);
 		$this->log["host"] = (isset($curlinfo["primary_ip"])) ? $curlinfo["primary_ip"] : gethostbyname(parse_url($curlinfo["url"], PHP_URL_HOST));
-		$this->log["request"] = (isset($curlinfo["request_header"])) ? array_map("trim", explode(PHP_EOL, $this->hide_credential(trim($curlinfo["request_header"])))) : array();
+		$this->log["request"] = (isset($curlinfo["request_header"])) ? array_map("trim", explode(PHP_EOL, $this->hide_credential(trim((string) $curlinfo["request_header"])))) : array();
 		foreach ($curlinfo as $key => $value) {
 			if (in_array($key, array("http_code", "header_size", "request_size", "total_time", "namelookup_time", "connect_time", "pretransfer_time", "size_upload", "size_download", "speed_download", "speed_upload", "starttransfer_time"))) {
 				if (is_array($value)) { $value = json_encode($value); }
@@ -193,7 +195,7 @@ class LazyCurl {
 		else {
 			# initialize variables for current request
 			$new_file = null;
-			$tmp_file = (file_exists(rtrim(getcwd(), "/")."/temp") && $this->is_writable(rtrim(getcwd(), "/")."/temp")) ? tempnam("temp", "lc_") : tempnam(sys_get_temp_dir(), "lc_");
+			$tmp_file = (file_exists(rtrim((string) getcwd(), "/")."/temp") && $this->is_writable(rtrim((string) getcwd(), "/")."/temp")) ? tempnam("temp", "lc_") : tempnam(sys_get_temp_dir(), "lc_");
 			$tmp_fp = fopen($tmp_file, "w");
 			# temporary curl options for downloading file
 			$old_options = array_merge(array("CURLOPT_FILE" => fopen("php://stdout", "w")), $this->options);
@@ -207,16 +209,16 @@ class LazyCurl {
 			if ($http_code >= 400) { trigger_error("server response {$http_code} when trying to access '".$this->hide_credential($url)."'", E_USER_WARNING); }
 			else {
 				# find the best matching local path for downloaded file
-				if (empty($local_path)) { $local_path = rtrim(getcwd(), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR."temp"; }
+				if (empty($local_path)) { $local_path = rtrim((string) getcwd(), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR."temp"; }
 				else {
-					$local_path = rtrim($local_path, DIRECTORY_SEPARATOR);
-					if (substr($local_path, 0, 2) == ".".DIRECTORY_SEPARATOR) { $local_path = rtrim(getcwd(), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.substr($local_path, 2); }			# fix relative path
+					$local_path = rtrim((string) $local_path, DIRECTORY_SEPARATOR);
+					if (substr($local_path, 0, 2) == ".".DIRECTORY_SEPARATOR) { $local_path = rtrim((string) getcwd(), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.substr($local_path, 2); }	# fix relative path
 				}
 				# find the best matching file name for downloaded file
 				if (empty($local_name)) {
 					if (!empty($this->header_vars[$this->location_idx]["content-disposition"])) {
 						preg_match("/filename\s*=\s*([^;]+)[;\s]/imsU", $this->header_vars[$this->location_idx]["content-disposition"], $matches);
-						if (!empty($matches[1])) { $local_name = trim($matches[1], " '\""); }									# (name + ext) first priority in http header
+						if (!empty($matches[1])) { $local_name = trim((string) $matches[1], " '\""); }							# (name + ext) first priority in http header
 					}
 					if (empty($local_name)) {
 						$pathinfo = pathinfo(parse_url($url, PHP_URL_PATH));
@@ -261,7 +263,7 @@ class LazyCurl {
 	#		@param boolean	$overwrite			default false to rename file by adding current unix timestamp, or set true to overwrite existing file
 	#		@return string						full remote path (username / password will be masked) with actual file name of the uploaded file, or false on error
 	public function upload($file, $remote_path, $remote_name = "", $overwrite = false) {
-		if (substr($file, 0, 2) == ".".DIRECTORY_SEPARATOR) { $file = rtrim(getcwd(), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.substr($file, 2); }						# fix relative path
+		if (substr($file, 0, 2) == ".".DIRECTORY_SEPARATOR) { $file = rtrim((string) getcwd(), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.substr($file, 2); }				# fix relative path
 		if (empty($file)) { trigger_error("an accessible file is required for uploading", E_USER_WARNING); }
 		elseif (!file_exists($file)) { trigger_error("'{$file}' is missing", E_USER_WARNING); }
 		elseif (is_dir($file)) { trigger_error("'{$file}' is a directory", E_USER_WARNING); }
@@ -269,7 +271,7 @@ class LazyCurl {
 		elseif (!preg_match("/^ftp:\/\//ims", $remote_path)) { trigger_error("upload() expects parameter 2 to be ftp url for uploading", E_USER_WARNING); }				# ftp only, http upload is a post request
 		else {
 			# temporary curl options for checking file list in remote path
-			$remote_path = rtrim($remote_path, "/")."/";
+			$remote_path = rtrim((string) $remote_path, "/")."/";
 			$old_options = array_merge(array("CURLOPT_FTPLISTONLY" => false), $this->options);
 			$tmp_options = array("CURLOPT_FTPLISTONLY" => true);
 			$this->set_opt($tmp_options);
@@ -334,7 +336,7 @@ class LazyCurl {
 				$this->session_cookie = true;
 			}
 			elseif ($this->session_cookie && !$enable) {								# basically there is no way to disable session cookie in curl library once it is enabled, workaround by resetting curl session
-				if (is_resource($this->ch)) { curl_close($this->ch); }
+				if (is_resource($this->ch) || ($this->ch instanceof CurlHandle)) { $this->ch = null; }
 				$this->ch = curl_init();
 				$this->set_opt($this->options);
 				$this->session_cookie = false;
@@ -401,7 +403,7 @@ class LazyCurl {
 	#		@param void
 	#		@param void
 	public function close() {
-		if (is_resource($this->ch)) { curl_close($this->ch); }
+		if (is_resource($this->ch) || ($this->ch instanceof CurlHandle)) { $this->ch = null; }
 		$this->data = "";
 		$this->header_vars = $this->cookies = array();
 		$this->log = array("host" => null, "summary" => null, "request" => array(), "response" => array(), "set-cookie" => array(), "curlinfo" => array());
@@ -420,8 +422,9 @@ class LazyCurl {
 			"CURLOPT_SSL_VERIFYPEER" => true,											# (ssl) enable ca root certificate checking
 			"CURLOPT_SSL_VERIFYHOST" => 2,												# (ssl) enable hostname checking in ssl certification
 			"CURLOPT_SSLVERSION" => 6,													# (ssl) default using tlsv1_2+ for better security
-			"CURLOPT_CAINFO" => __DIR__.DIRECTORY_SEPARATOR."cacert.pem",				# (ssl) updated ca root certificate (revision 2026-03-19 downloaded from https://curl.haxx.se/docs/caextract.html)
+			"CURLOPT_CAINFO" => __DIR__.DIRECTORY_SEPARATOR."cacert.pem",				# (ssl) updated ca root certificate (revision 2026-09-25 downloaded from https://curl.haxx.se/docs/caextract.html)
 			"CURLOPT_SAFE_UPLOAD" => true,												# (method, locked) better approach for file upload operation since php v5.5.0
+			"CURLOPT_IPRESOLVE" => CURL_IPRESOLVE_V4,									# (hostname) default using ipv4 for better compatibility
 			"CURLOPT_PROTOCOLS" => CURLPROTO_HTTP | CURLPROTO_HTTPS | CURLPROTO_FTP,	# (request, locked) allow specified protocols only
 			"CURLOPT_ENCODING" => "",													# (response) enable all supported compression
 			"CURLOPT_FAILONERROR" => false,												# (response) always returns response even if response is http 4xx-5xx error
@@ -432,7 +435,7 @@ class LazyCurl {
 			"CURLOPT_CONNECTTIMEOUT" => 15,												# (timeout) connection timeout
 			"CURLOPT_TIMEOUT" => 45,													# (timeout) request timeout
 			"CURLOPT_REFERER" => "",													# (header) always begins with direct access
-			"CURLOPT_USERAGENT" => "LazyCurl/1.5",										# (header) default user agent
+			"CURLOPT_USERAGENT" => "LazyCurl/1.6",										# (header) default user agent
 			"CURLOPT_HEADERFUNCTION" => array($this, "header_handler"),					# (header, locked) callback function to extract incoming header
 			"CURLINFO_HEADER_OUT" => true,												# (header, locked) dump outgoing header to curlinfo
 		);
@@ -459,7 +462,7 @@ class LazyCurl {
 	#		@return string						date / time string a format "Y-m-d H:i:s O"
 	private function now($timezone = "utc") {
 		if (!in_array(strtolower($timezone), array_map("strtolower", timezone_identifiers_list()))) { $timezone = "utc"; }
-		$now = new DateTime(null, new DateTimeZone($timezone));
+		$now = new DateTime("now", new DateTimeZone($timezone));
 		return $now->format("Y-m-d H:i:s O");
 	}
 
@@ -537,9 +540,9 @@ class LazyCurl {
 			# extract cookie and its attributes
 			$set_cookie_parts = explode(";", $set_cookie_header);
 			for ($i=0; $i<count($set_cookie_parts); $i++) {
-				$set_cookie_pair = explode("=", trim($set_cookie_parts[$i]), 2);
-				$key = (isset($set_cookie_pair[0])) ? trim($set_cookie_pair[0]) : null;
-				$value = (isset($set_cookie_pair[1])) ? trim($set_cookie_pair[1]) : null;
+				$set_cookie_pair = explode("=", trim((string) $set_cookie_parts[$i]), 2);
+				$key = (isset($set_cookie_pair[0])) ? trim((string) $set_cookie_pair[0]) : null;
+				$value = (isset($set_cookie_pair[1])) ? trim((string) $set_cookie_pair[1]) : null;
 				if (!is_null($key) && !is_null($value) && ($i == 0)) {																									# cookie name and value
 					$set_cookie["name"] = $key;
 					$set_cookie["value"] = $value;
@@ -556,11 +559,11 @@ class LazyCurl {
 			}
 			unset($set_cookie["max-age"]);
 			# modify domain and hostonly attributes for better association
-			$set_cookie["domain"] = trim($set_cookie["domain"], ".");
+			$set_cookie["domain"] = trim((string) $set_cookie["domain"], ".");
 			if (!empty($set_cookie["domain"])) { $set_cookie["hostonly"] = false; }												# domain is provided in set-cookie indicating sub-domain is allowed
 			else { $set_cookie["domain"] = parse_url(curl_getinfo($this->ch, CURLINFO_EFFECTIVE_URL), PHP_URL_HOST); }			# extract domain from last effective url
 			# modify path attribute for better association
-			$set_cookie["path"] = trim($set_cookie["path"], "/");
+			$set_cookie["path"] = trim((string) $set_cookie["path"], "/");
 			$set_cookie["path"] = (!empty($set_cookie["path"])) ? "/".$set_cookie["path"]."/" : "/";
 			# create an array key using secure, domain, path and name to simplify add and update operations
 			$key = ($set_cookie["secure"] ? "https" : "http")."://".$set_cookie["domain"].$set_cookie["path"].$set_cookie["name"];
@@ -580,7 +583,7 @@ class LazyCurl {
 	#		@param resource	$ch					curl resource
 	#		@param string	$header				http response header, normally with a trailing line break
 	private function header_handler($ch, $header) {
-		$line = trim($header);
+		$line = trim((string) $header);
 		if (!empty($line)) {
 			if (count($this->log["response"]) == 0) { $this->location_idx++; }								# first location
 			if (!isset($this->log["response"][$this->location_idx])) {										# initialize array for each location
@@ -590,8 +593,8 @@ class LazyCurl {
 			# inspect name / value pair
 			$pair = explode(":", $header, 2);
 			if (count($pair) == 2) {
-				$pair[0] = strtolower(trim($pair[0]));
-				$pair[1] = trim($pair[1]);
+				$pair[0] = strtolower(trim((string) $pair[0]));
+				$pair[1] = trim((string) $pair[1]);
 				if ($pair[0] == "set-cookie") { $this->cookie_handler($pair[1]); }							# received cookie headers will still be processed as read-only variables even when no cookie handling is enabled
 				else {
 					# store name / value pair, and additionally an array of valid ip extracted from value that may be useful sometimes
@@ -619,7 +622,7 @@ class LazyCurl {
 			elseif (!is_readable($file)) { trigger_error("no read permission to access '{$file}'", E_USER_WARNING); }
 			else {
 				$this->session_cookie = false;
-				if (substr($file, 0, 2) == ".".DIRECTORY_SEPARATOR) { $file = rtrim(getcwd(), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.substr($file, 2); }				# fix relative path
+				if (substr($file, 0, 2) == ".".DIRECTORY_SEPARATOR) { $file = rtrim((string) getcwd(), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.substr($file, 2); }		# fix relative path
 				$this->options["CURLOPT_COOKIEFILE"] = $file;
 				curl_setopt($this->ch, CURLOPT_COOKIEFILE, $file);
 			}
@@ -638,7 +641,7 @@ class LazyCurl {
 		elseif (!$this->is_writable($file)) { trigger_error("no write permission to access '{$file}'", E_USER_WARNING); }
 		else {
 			$this->session_cookie = false;
-			if (substr($file, 0, 2) == ".".DIRECTORY_SEPARATOR) { $file = rtrim(getcwd(), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.substr($file, 2); }					# fix relative path
+			if (substr($file, 0, 2) == ".".DIRECTORY_SEPARATOR) { $file = rtrim((string) getcwd(), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.substr($file, 2); }			# fix relative path
 			$this->options["CURLOPT_COOKIEJAR"] = $file;
 			curl_setopt($this->ch, CURLOPT_COOKIEJAR, $file);
 		}
@@ -682,7 +685,7 @@ class LazyCurl {
 				# download remote file if necessary
 				if (preg_match("/^(https?|ftp):\/\//ims", $local_file)) { $this->get_file($local_file, $post_name, $mime_type); }
 				# apply changes
-				if (substr($local_file, 0, 2) == ".".DIRECTORY_SEPARATOR) { $local_file = rtrim(getcwd(), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.substr($local_file, 2); }				# fix relative path
+				if (substr($local_file, 0, 2) == ".".DIRECTORY_SEPARATOR) { $local_file = rtrim((string) getcwd(), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.substr($local_file, 2); }		# fix relative path
 				if (file_exists($local_file)) {
 					if (empty($post_name)) { $post_name = basename($local_file); }
 					if (empty($mime_type) && function_exists("mime_content_type")) { $mime_type = mime_content_type($local_file); }
@@ -704,7 +707,7 @@ class LazyCurl {
 	#		@return void
 	private function get_file(&$remote_file, &$post_name, &$mime_type) {
 		$tmp_name = $tmp_type = null;
-		$tmp_file = (file_exists(rtrim(getcwd(), "/")."/temp") && $this->is_writable(rtrim(getcwd(), "/")."/temp")) ? tempnam("temp", "lc_") : tempnam(sys_get_temp_dir(), "lc_");
+		$tmp_file = (file_exists(rtrim((string) getcwd(), "/")."/temp") && $this->is_writable(rtrim((string) getcwd(), "/")."/temp")) ? tempnam("temp", "lc_") : tempnam(sys_get_temp_dir(), "lc_");
 		$tmp_fp = fopen($tmp_file, "w");
 		$mem_fp = fopen("php://temp", "w+");
 		$this->tmp_files[] = $tmp_file;
@@ -712,7 +715,8 @@ class LazyCurl {
 			"CURLOPT_SSL_VERIFYPEER" => true,											# (ssl) enable ca root certificate checking
 			"CURLOPT_SSL_VERIFYHOST" => 2,												# (ssl) enable hostname checking in ssl certification
 			"CURLOPT_SSLVERSION" => 6,													# (ssl) default using tlsv1_2+ for better security
-			"CURLOPT_CAINFO" => __DIR__.DIRECTORY_SEPARATOR."cacert.pem",				# (ssl) updated ca root certificate (revision 2026-03-19 downloaded from https://curl.haxx.se/docs/caextract.html)
+			"CURLOPT_CAINFO" => __DIR__.DIRECTORY_SEPARATOR."cacert.pem",				# (ssl) updated ca root certificate (revision 2026-09-25 downloaded from https://curl.haxx.se/docs/caextract.html)
+			"CURLOPT_IPRESOLVE" => CURL_IPRESOLVE_V4,									# (hostname) default using ipv4 for better compatibility
 			"CURLOPT_PROTOCOLS" => CURLPROTO_HTTP | CURLPROTO_HTTPS | CURLPROTO_FTP,	# (request) allow specified protocols only
 			"CURLOPT_ENCODING" => "",													# (response) enable all supported compression
 			"CURLOPT_FAILONERROR" => false,												# (response) always returns response even if response is http 4xx-5xx error
@@ -755,7 +759,7 @@ class LazyCurl {
 			# find the best matching file name for downloaded file
 			if (empty($post_name)) {
 				preg_match_all("/^content-disposition:\s*[^;]+;.*filename\s*=\s*([^;]+)[;\s]/imsU", $tmp_headers, $matches);
-				if (!empty($matches[1])) { $tmp_name = trim($matches[1][count($matches[1]) - 1], " '\""); }						# (name + ext) first priority in http header
+				if (!empty($matches[1])) { $tmp_name = trim((string) $matches[1][count($matches[1]) - 1], " '\""); }			# (name + ext) first priority in http header
 				if (empty($tmp_name)) {
 					$pathinfo = pathinfo(parse_url($remote_file, PHP_URL_PATH));
 					if (!empty($pathinfo["filename"])) { $tmp_name = $pathinfo["filename"]; }									# (name) failover to file name in target url
