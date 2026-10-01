@@ -77,8 +77,8 @@ echo "\r\n";
 echo ">> Test 4 : {$scheme} download + ftp upload... ";
 $check = false;
 $file_dl = $curl->download("{$scheme}://www.google.com/favicon.ico", "", "google.ico", false);
-// $file_ul = $curl->upload($file_dl, "ftp://testuser:testpass@127.0.0.1/", "favicon.ico", false);
-$file_ul = $curl->upload($file_dl, "ftp://demo:demo@demo.wftpserver.com/upload/", "favicon.ico", false);
+$file_ul = $curl->upload($file_dl, "ftp://testuser:hrXVjPwMj8NuFkZW@127.0.0.1/", "favicon.ico", false);
+// $file_ul = $curl->upload($file_dl, "ftp://demo:demo@demo.wftpserver.com/upload/", "favicon.ico", false);
 $http_log = $curl->get_log();
 if (($file_ul) && ($http_log["curlinfo"]["size_upload"] > 1024)) { $check = true; }
 if ($check) { $exit -= 1; echo "OK"; } else { echo "FAIL"; }
