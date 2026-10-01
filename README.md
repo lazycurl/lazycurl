@@ -1,5 +1,5 @@
 # LazyCurl
-A PHP class which brings back @-prefix usage in CURL requests to live, even in PHP 7. <http://lazycurl.net/>
+A PHP class which brings back @-prefix usage in CURL requests to live, even in PHP 8. <http://lazycurl.net/>
 
 ## About
 The [PHP CURL library](http://php.net/manual/book.curl.php) is an extremely powerful tool supporting a wide range of protocols. Yet it may be too powerful that there are [over 140 customizable options](http://php.net/manual/function.curl-setopt.php) and some of them are affecting one another. LazyCurl is developed to provide an easy-to-use interface for most HTTP requests.
@@ -12,7 +12,7 @@ The @-prefix usage in PHP CURL was once a handy method for uploading file in HTT
 * Logs HTTP requests being sent and captures responses including redirections.
 * Extracts all cookies from HTTP responses.
 * Supports multi-dimensional array in HTTP POST requests.
-* Provides @-prefix usage in PHP 5 and PHP 7 with @URL capability.
+* Provides @-prefix usage in PHP 5, PHP 7 and PHP 8 with @URL capability.
 * Streaming transfers large file without memory concern.
 * Supports FTP stream upload single file.
 * Only 11 methods to achieve everything above.
@@ -55,7 +55,14 @@ That's it. The target PHP will receive text fields 'username', 'email' and 'twit
 * PHP 5.6.0 with CURL Library 7.36.0
 * PHP 7.0.3 with CURL Library 7.46.0 *(fatal error due to a [PHP bug #71225](https://bugs.php.net/bug.php?id=71225) since 7.0.0, fixed in 7.0.3)*
 * PHP 7.1.0 with CURL Library 7.51.0
+* PHP 7.2.34 with CURL Library 7.67.0
+* PHP 7.3.33 with CURL Library 7.70.0
 * PHP 7.4.33 with CURL Library 7.74.0
+* PHP 8.0.30 with CURL Library 7.76.1
+* PHP 8.1.34 with CURL Library 8.15.0
+* PHP 8.2.34 with CURL Library 8.22.0
+* PHP 8.3.35 with CURL Library 8.22.0
+* PHP 8.4.26 with CURL Library 8.22.0
 
 ## Examples
 LazyCurl comes with 6 examples to show you how to use all 11 methods in different scenarios. Simply upload to web server and open in browser to see them in live.
