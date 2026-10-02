@@ -1,4 +1,4 @@
-# LazyCurl
+# LazyCurl  ![workflow-php5](https://github.com/lazycurl/lazycurl/actions/workflows/workflow-php5.yml/badge.svg) ![workflow-php7](https://github.com/lazycurl/lazycurl/actions/workflows/workflow-php7.yml/badge.svg) ![workflow-php8](https://github.com/lazycurl/lazycurl/actions/workflows/workflow-php8.yml/badge.svg)
 A PHP class which brings back @-prefix usage in CURL requests to live, even in PHP 8. <http://lazycurl.net/>
 
 ## About
