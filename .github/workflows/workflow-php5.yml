@@ -13,6 +13,9 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
+    concurrency:
+      group: workflow-test
+      queue: max
 
     strategy:
       fail-fast: false
