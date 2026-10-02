@@ -1,0 +1,35 @@
+name: workflow-php7
+
+on:
+  push:
+    branches: [ "master" ]
+    paths-ignore:
+      - '**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        # PHP 7 series
+        php-version: ['7.0', '7.1', '7.2', '7.3', '7.4']
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v6
+
+      - name: Setup PHP v${{ matrix.php-version }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: curl, fileinfo, openssl
+          coverage: none
+
+      - name: Execute Test
+        run: php workflow-test.php
