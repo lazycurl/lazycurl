@@ -1,4 +1,4 @@
-name: workflow-php8
+name: php8
 
 on:
   push:
