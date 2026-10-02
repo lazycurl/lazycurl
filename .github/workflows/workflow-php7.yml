@@ -1,4 +1,4 @@
-name: workflow-php7
+name: php7
 
 on:
   push:
